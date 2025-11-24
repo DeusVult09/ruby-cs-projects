@@ -11,12 +11,14 @@ end
 fibs(10)
 
 def fibs_rec(n)
+  #add test
+  puts 'This was printed recursively'
+
   return [1] if n == 1
   return [1, 1] if n == 2
   
   prev = fibs_rec(n - 1)
   prev + [prev [-1] + prev [-2]]
 end
-
 
 fibs_rec(8)
