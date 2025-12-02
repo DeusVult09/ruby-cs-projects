@@ -4,6 +4,8 @@ class HashMap
   THRESHOLD = (CAPACITY * LOAD_FACTOR).floor
 
   def initialize
+    attr_reader :capacity, :threshold, :load_factor, :size
+    
     @load_factor = LOAD_FACTOR
     @capacity = CAPACITY
     @threshold = THRESHOLD
@@ -19,7 +21,9 @@ class HashMap
   end
 
   def bucket_index(key)
-    hash(key) % @capacity
+    index = hash(key) % @capacity
+    raise IndexError if index.negative? || index >= @buckets.length
+    index
   end
 
   def set(key, value)
@@ -81,10 +85,14 @@ class HashMap
   def remove(key)
     index = bucket_index(key)
     bucket = @buckets[index]
-    removed = []
 
-    bucket.each do |pair|
-      return 
-    end
+    if pair = bucket.detect { |k, v| k == key }
+      return pair
+    else 
+      nil
+    end 
+    bucket.delete(pair)
+    @size -= 1
+    pair[1]
   end
 end
