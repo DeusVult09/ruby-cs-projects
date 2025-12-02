@@ -4,7 +4,6 @@ class HashMap
   THRESHOLD = (CAPACITY * LOAD_FACTOR).floor
 
   def initialize
-    attr_reader :capacity, :threshold, :load_factor, :size
 
     @load_factor = LOAD_FACTOR
     @capacity = CAPACITY
@@ -40,6 +39,15 @@ class HashMap
     @size += 1
   end
 
+  def get_at(index)
+    raise IndexError if index.negative?
+
+    entries.each_with_index do |entry, i|
+      return entry if i == index
+    end
+    raise IndexError index >= entries.length?
+  end
+
   def needs_resize?
     (@size + 1) >  @threshold
   end
@@ -62,7 +70,7 @@ class HashMap
     bucket = @buckets[index]
 
     bucket.each do |pair|
-      return pair[1] if key[0] == key
+      return pair[1] if pair[0] == key
     end
     nil
   end
@@ -87,9 +95,9 @@ class HashMap
     removed = bucket.detect { |k, v| k == key }
     return nil unless removed
    
-    bucket.delete(pair)
+    bucket.delete(removed)
     @size -= 1
-    removed[1]
+    removed[0]
   end
 
   def length
@@ -102,4 +110,26 @@ class HashMap
     puts "The array doesn't exist"
   end
 
+  def keys
+    entries.map { |entry| entry[0] }
+  end
+
+  def values
+    entries.map { |entry| entry[1] }
+  end
+
+  def entries 
+    array = []
+
+    @buckets.each do |bucket|
+      bucket.each do |pair|
+        array << pair
+      end
+    end
+    array
+  end
+
+  def to_s
+    entries.map { |k, v| "#{k} => #{v}" }.join("\n")
+  end
 end
