@@ -5,7 +5,7 @@ class HashMap
 
   def initialize
     attr_reader :capacity, :threshold, :load_factor, :size
-    
+
     @load_factor = LOAD_FACTOR
     @capacity = CAPACITY
     @threshold = THRESHOLD
@@ -21,9 +21,7 @@ class HashMap
   end
 
   def bucket_index(key)
-    index = hash(key) % @capacity
-    raise IndexError if index.negative? || index >= @buckets.length
-    index
+    hash(key) % @capacity
   end
 
   def set(key, value)
@@ -86,13 +84,22 @@ class HashMap
     index = bucket_index(key)
     bucket = @buckets[index]
 
-    if pair = bucket.detect { |k, v| k == key }
-      return pair
-    else 
-      nil
-    end 
+    removed = bucket.detect { |k, v| k == key }
+    return nil unless removed
+   
     bucket.delete(pair)
     @size -= 1
-    pair[1]
+    removed[1]
   end
+
+  def length
+    @size
+  end
+
+  def clear
+    @buckets = Array.new(@capacity) { [] }
+    @size = 0
+    puts "The array doesn't exist"
+  end
+
 end
