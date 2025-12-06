@@ -71,7 +71,25 @@ class Tree
       end
 
     end
+
+    def level_order(root, &block)
+      return Array.new if root.nil?
+      queue = [root] #take the root into the queue and make it the 1st node to be processes
+      output = [] #remove the node and return it to a new array
+
+      while !queue.empty? #unless the queue array = [] 
+        current_node = queue.shift #remove its value and store it in the curr variable
+        if block_given? #if there is a block 
+          yield current_node #print curr_node
+        else
+          output << current_node.data #otherwise just return an array with 
+        end
+        queue << current_node.left if current_node.left #add value from the left to the queue
+        queue << current_node.right if current_node.right #add from the left right
+      end
+      output 
+    end
+
+
   end
-
-
 end
