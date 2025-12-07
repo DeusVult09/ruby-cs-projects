@@ -8,7 +8,7 @@ class Tree
 
   def build_tree(array)
     return nil if array.empty?
-
+      
       mid = arr.length / 2
       @root = Node.new(arr[mid])
 
@@ -168,5 +168,15 @@ class Tree
     end
   end
 
-  def 
+  def balanced?(node)
+    return true if node.nil?# if subtree empty then balanced
+    return (height(node.left) - height(node.right)).abs <= 1 && balanced?(node.left) && balanced?(node.right)
+    #calculating height of left and right subtrees of current node
+    #checking if every node in the tree satisfies the balance condition, not just the current node.
+  end
+
+  def rebalance
+    sorted = inorder
+    @root = build_tree(sorted)
+  end
 end
