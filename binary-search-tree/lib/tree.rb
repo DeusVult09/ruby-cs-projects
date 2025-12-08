@@ -1,44 +1,46 @@
+require_relative 'node'
+
 class Tree
   attr_reader :root
 
-  def initialize
-    @root = buid_tree(array)
+  def initialize(array)
     array = array.sort.uniq
+    @root = build_tree(array)
   end
 
   def build_tree(array)
     return nil if array.empty?
       
-      mid = arr.length / 2
-      @root = Node.new(arr[mid])
+      mid = array.length / 2
+      root = Node.new(array[mid])
 
-      @root.left = build_tree(array[0...mid])
-      @root.right = build_tree(array[mid + 1..-1])
-      @root
+      root.left = build_tree(array[0...mid])
+      root.right = build_tree(array[mid + 1..-1])
+      root
   end
 
-  def insert(value)
-    return Node.new if @root.empty?
+  def insert(value, node = @root)
+    return Node.new(value) if @root.empty?
 
-    if value < @root.data
-      @root.left = insert(@root.left, value)
+    if value < node.data
+      node.left = insert(node.left, value)
     else
-      @root.right = insert(@root.right, value)
+      node.right = insert(node.right, value)
     end
-    @root
+    node
   end
 
   def get_successor(node) #method to find a successor
-    node = node.right #move to the right node
-    return nil if node.nil? #if there is no node after, return nil
+    node = node.right #move to the right node because the succ of a node is the smallest from the right
+    return nil if node.nil? #node has no right subtree - > no successor inside the subtree
     #otherwise enter the loop...
-    while node.left #traverse a through left node -> Does it have a child? Yes?
+    while node.left #traverse through left node -> successor is the leftmost in the right subtree
       node = node.left # then stay on the left child. If there are more left children 
     end
-    node #loop until we find the last left child. Then the loop stops, Returns the value1
+    node #return leftmost node -> successor found -> the loop stops -> returns the value1
   end
   
-  def delete(node, value)
+  def delete(node = @root, value)
     return nil if node.nil?
 
     if value < node.data 
@@ -48,7 +50,7 @@ class Tree
         node.right = delete(node.right, value)
         return node
     else
-      #delete if there is 1 child 
+      #found and delete if there is 1 child 
       return node.right if node.left.nil?
       return node.left if node.right.nil?
 
@@ -60,7 +62,7 @@ class Tree
     end
   end
 
-  def find(node, value)
+  def find(node = @root, value)
     return nil if node.nil?
     if value == node.data #if the node we are currently at equals to the value we are asking for
       return node  #-> return it
@@ -71,9 +73,9 @@ class Tree
     end
   end
 
-  def level_order(root, &block)
-    return Array.new if root.nil?
-    queue = [root] #take the root into the queue and make it the 1st node to be processes
+  def level_order(node = @root, &block)
+    return Array.new if node.nil?
+    queue = [node] #take the root into the queue and make it the 1st node to be processes
     output = [] #remove the node and return it to a new array
 
     while !queue.empty? #unless the queue array is empty = [] 
@@ -85,9 +87,9 @@ class Tree
       end
       queue << current_node.left if current_node.left #add value from the left to the queue
       queue << current_node.right if current_node.right #add from the left right
-  
-      output 
     end
+    
+    output 
   end
 
   def recursive_lvl_order(queue = [root], output = [], &block)
@@ -104,7 +106,7 @@ class Tree
     recursive_lvl_order(queue, output, &block)
   end
 
-  def preorder(node, result = [], &block)
+  def preorder(node = @root, result = [], &block)
     return result if node.nil?
 
     if block_given?
@@ -118,7 +120,7 @@ class Tree
     result
   end
   
-  def inorder(node, result = [], &block)
+  def inorder(node = @root, result = [], &block)
     return result if node.nil?
 
     inorder(node.left, result, &block)
@@ -133,7 +135,7 @@ class Tree
     result
   end
 
-  def postorder(node, result = [], &block)
+  def postorder(node = @noode, result = [], &block)
     return result if node.nil?
 
     postorder(node.left, result, &block)
@@ -157,18 +159,18 @@ class Tree
     end #we need .max to identify the logest possible path down
   end
 
-  def depth(node, value, curr_depth = 0)
+  def depth(value, node = @root, current = 0)
     return -1 if node.nil?
 
-    return curr_depth if node.data == value # base case -> we found the node and return the depth
+    return current if node.data == value # base case -> we found the node and return the depth
     if value < node.data #search that value node from the elft subtree
-      depth(node.left, value, curr_depth + 1) #add 1 while going down
+      depth(node.left, value, current+ 1) #add 1 while going down
     else #search the value input from the right subtree
-      depth(node.right, value, curr_depth + 1)
+      depth(node.right, value, current + 1)
     end
   end
 
-  def balanced?(node)
+  def balanced?(node = @root)
     return true if node.nil?# if subtree empty then balanced
     return (height(node.left) - height(node.right)).abs <= 1 && balanced?(node.left) && balanced?(node.right)
     #calculating height of left and right subtrees of current node
@@ -179,4 +181,11 @@ class Tree
     sorted = inorder
     @root = build_tree(sorted)
   end
+
+  def pretty_print(node = @root, prefix = '', is_left = true)
+    pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
+    puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
+    pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
+  end
+
 end
