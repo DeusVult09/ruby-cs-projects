@@ -20,12 +20,13 @@ class Tree
   end
 
   def insert(value, node = @root)
-    return Node.new(value) if @root.empty?
+    return @root = Node.new(value) if @root.nil?
+    return Node.new(value) if node.nil?
 
     if value < node.data
-      node.left = insert(node.left, value)
+      node.left = insert(value, node.left)
     else
-      node.right = insert(node.right, value)
+      node.right = insert(value, node.right)
     end
     node
   end
@@ -135,7 +136,7 @@ class Tree
     result
   end
 
-  def postorder(node = @noode, result = [], &block)
+  def postorder(node = @root, result = [], &block)
     return result if node.nil?
 
     postorder(node.left, result, &block)
