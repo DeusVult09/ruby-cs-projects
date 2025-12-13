@@ -32,16 +32,33 @@ Print the path and number of moves
 =end
 
 class Knight
-  POSSIBLE_MOVES = [[+2, +1], [+2, -1], [-2, +1], [-2, -1], 
+  VALID_MOVES = [[+2, +1], [+2, -1], [-2, +1], [-2, -1], 
   [+1, +2], [+1, -2], [-1, +2], [-1, -2]]
   
   attr_accessor :position
 
   def initialize(position)
-    @position = postion
+    @position = position
   end
 
-  def legal_moves
+  def legal_moves(square)
+    x = square[0] #defining a horizontal axis in a square
+    y = square[1] #defining a vertical axis
+
+    legal_moves = []
+
+    VALID_MOVES.each do | px, py |
+      new_x = x + px #we are applying valid moves 
+      new_y = y + py #storing in new variables
+
+      if new_x.between?(0..7) && new_y.between?(0..7)
+        legal_moves << [new_x, new_y] #only if moves are within board edges
+      end
+    end
+    legal_moves #return them
+  end
+
+  def knight_moves(start_pos, target_pos)
     
   end
 end
