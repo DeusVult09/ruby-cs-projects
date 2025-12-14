@@ -55,22 +55,22 @@ class Knight
 
   def knight_moves(start_pos, target_pos) 
     queue = [[start_pos]] #start queuing the path like "paths we need to explore further"
-    visited_paths = [start_pos]
+    visited_paths = [start_pos] 
 
     while !queue.empty?
-      current_path = queue.shift
-      curr_square = current_path.last
-      possible_moves = legal_moves(curr_square)
+      current_path = queue.shift #removing the path from the queue and storing in curr_path
+      curr_square = current_path.last #now the curr_square is the last square in the curr_path list 
+      possible_moves = legal_moves(curr_square) #compute all posible legal moves for that curr_square
 
       if curr_square == target_pos
         puts "You made it in #{current_path.length - 1} moves! Here is your path: #{current_path}"
-        return current_path
+        return current_path #if the start_square equals to end_square return it
       else
-        possible_moves.each do |position|
-          next if visited_paths.include?(position)
-          visited_paths << position
-          new_path = current_path + [position]
-          queue << new_path
+        possible_moves.each do |position|  #if not expand the list of all legal moves
+          next if visited_paths.include?(position) #if we already visited that position, skip and move to the next
+          visited_paths << position #mark square as visited 
+          new_path = current_path + [position] #for each legal move create a new path
+          queue << new_path #add new path to the queue 
         end
       end
     end
