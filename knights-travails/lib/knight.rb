@@ -1,4 +1,5 @@
 =begin
+Pseudocode:
 Define a list of the 8 possible knight movements and store thenm in a constant variable
 
 Define a function "legal_moves(square)" that:
