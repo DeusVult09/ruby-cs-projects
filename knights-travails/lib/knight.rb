@@ -32,18 +32,13 @@ Print the path and number of moves
 =end
 
 class Knight
+
   VALID_MOVES = [[+2, +1], [+2, -1], [-2, +1], [-2, -1], 
   [+1, +2], [+1, -2], [-1, +2], [-1, -2]]
-  
-  attr_accessor :position
-
-  def initialize(position)
-    @position = position
-  end
 
   def legal_moves(curr_square)
-    x = square[0] #defining a horizontal axis in a square
-    y = square[1] #defining a vertical axis
+    x = curr_square[0] #defining a horizontal axis in a square
+    y = curr_square[1] #defining a vertical axis
 
     moves = [] #creating an array of legal moves
 
@@ -51,7 +46,7 @@ class Knight
       new_x = x + px #we are applying valid moves and calculating candidate square for legal moves
       new_y = y + py #storing in new variables
 
-      if new_x.between?(0..7) && new_y.between?(0..7) 
+      if new_x.between?(0, 7) && new_y.between?(0, 7) 
         moves << [new_x, new_y] #only if moves are within board edges add them to a legal moves list
       end
     end
@@ -59,8 +54,8 @@ class Knight
   end
 
   def knight_moves(start_pos, target_pos) 
-    queue = [[start_pos]]
-    visited_paths = []
+    queue = [[start_pos]] #start queuing the path like "paths we need to explore further"
+    visited_paths = [start_pos]
 
     while !queue.empty?
       current_path = queue.shift
@@ -68,7 +63,7 @@ class Knight
       possible_moves = legal_moves(curr_square)
 
       if curr_square == target_pos
-        puts "You made it in #{current_path.length - 1}! Here is your path: #{current_path}"
+        puts "You made it in #{current_path.length - 1} moves! Here is your path: #{current_path}"
         return current_path
       else
         possible_moves.each do |position|
