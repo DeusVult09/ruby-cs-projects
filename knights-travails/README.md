@@ -1,4 +1,17 @@
-Pseudocode:
+## Knights Travail
+
+Project consits of the following steps:
+
+## Algorithm
+
+1. Initialize queue with the starting square
+2. Use breadth-first search to explore legal knight moves
+3. Track visited squares to avoid cycles
+4. Stop when the target square is reached
+5. Return the shortest path
+
+
+## Pseudocode:
 Define a list of the 8 possible knight movements and store thenm in a constant variable
 
 Define a function "legal_moves(square)" that:
